@@ -1,6 +1,8 @@
 module.exports = exports = function(client) {
+  var liveconf = require('liveconf');
   var fs = require('fs');
-  var conf = JSON.parse(fs.readFileSync(__dirname + '/rkb.config.json').toString());
+  //var conf = JSON.parse(fs.readFileSync(__dirname + '/rkb.config.json').toString());
+  conf = liveconf(__dirname + '/rkb.config.json');
 
   client.addListener('message', function (nick, to, text, message) {
      var match = getSomethingToSay(text, conf);

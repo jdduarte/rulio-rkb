@@ -1,0 +1,43 @@
+ <!DOCTYPE html>
+ <html>
+ 	<head>
+ 		<title>RKB Opinions Editor</title>
+
+ 		<!-- css -->
+ 		<link rel='stylesheet' href='/stylesheets/style.css' />
+ 		<style type="text/css" media="screen">
+		    
+		    #editor { 
+		    	position: relative;
+		    	width: 600px;
+		    	height: 400px;
+		        margin: 0;
+		    }
+		  </style>
+
+ 		<!-- javascript libs -->
+ 		<script type='text/javascript' src='/javascripts/lib/jquery-1.8.2.min.js'></script>
+ 		<script type='text/javascript' src='/javascripts/lib/underscore-min.js'></script>
+ 		<script type='text/javascript' src='/javascripts/lib/backbone-min.js'></script>
+ 		<script type='text/javascript' src='/javascripts/lib/ace/ace.js'></script>
+
+ 		<!-- javascript -->
+		<script type='text/javascript' src='/javascripts/rkb.js'></script> 		
+		<script type='text/javascript' src='/javascripts/models/config.js'></script> 
+		<script type='text/javascript' src='/javascripts/views/editor.js'></script> 
+		<script type='text/javascript' src='/javascripts/views/controls.js'></script> 
+		<script type='text/javascript' src='/javascripts/app.js'></script>
+
+		<!-- templates -->
+		<script type="text/template" id="controlsTemplate">
+			<input type="button" id="get_config" value="Get config" />
+			<input type="button" id="set_config" value="Set config" />
+		</script>
+
+ 	</head>
+ 	<body>
+ 		<h1>Welcome to RKB Opinions Editor</h1>
+
+ 		<div id="editor"></div>
+ 	</body>
+ </html>
