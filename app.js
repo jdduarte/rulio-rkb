@@ -47,7 +47,7 @@ app.get('/config', function(req, res){
 });
 
 app.post('/config', function(req, res){
-  fs.writeFile(configFile, JSON.stringify(req.body), function(err) {
+  fs.writeFile(configFile, JSON.stringify(req.body, undefined, 2), function(err) {
     if (err) {
       res.send(500);
       console.error(err);
