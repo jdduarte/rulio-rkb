@@ -6,6 +6,8 @@
 var express = require('express');
 var fs = require('fs');
 var editor = require('./routes/editor');
+var path = require('path');
+var exists = fs.existsSync || path.existsSync ;
 
 var app = module.exports = express.createServer();
 
@@ -31,6 +33,10 @@ app.configure('production', function(){
 // Routes
 
 var configFile = __dirname + '/rkb.config.json';
+
+if (!exists(configFile)) {
+  fs.writeFileSync(configFile, fs.readFileSync(configFile + '.example'));
+}
 
 app.get('/config', function(req, res){
   fs.readFile(configFile, function(err, data) {
