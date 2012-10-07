@@ -21,6 +21,7 @@
 
     setConfig: function(){
         var config = this.editor.getCode();
+        this.model.clear({silent: true});
         this.model.set(config);
     },
 
