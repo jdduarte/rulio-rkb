@@ -30,18 +30,42 @@ app.configure('production', function(){
 
 // Routes
 
+var configFile = __dirname + '/rkb.config.json';
+
 app.get('/config', function(req, res){
-  var conf = JSON.parse(fs.readFileSync(__dirname + '/rkb.config.json').toString());
-  res.header("Content-Type", "application/json");
-  res.send(conf);
+  fs.readFile(configFile, function(err, data) {
+    if (err) {
+      res.send(500);
+      console.error(err);
+      return;
+    }
+
+    var conf = JSON.parse(data.toString());
+    res.header("Content-Type", "application/json");
+    res.send(conf);
+  });
 });
 
 app.post('/config', function(req, res){
-  fs.writeFileSync(__dirname + '/rkb.config.json', JSON.stringify(req.body));
+  fs.writeFile(configFile, JSON.stringify(req.body, undefined, 2), function(err) {
+    if (err) {
+      res.send(500);
+      console.error(err);
+      return;
+    }
 
-  var conf = JSON.parse(fs.readFileSync(__dirname + '/rkb.config.json').toString());
-  res.header("Content-Type", "application/json");
-  res.send(conf);
+    fs.readFile(configFile, function(err, data) {
+      if (err) {
+        res.send(500);
+        console.error(err);
+        return;
+      }
+
+      var conf = JSON.parse(data.toString());
+      res.header("Content-Type", "application/json");
+      res.send(conf);
+    });
+  });
 });
 
 app.listen(3000, function(){
