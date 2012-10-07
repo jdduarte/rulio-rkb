@@ -10,7 +10,7 @@
         this.$el = $('#editor');
         this.editor = ace.edit("editor");
         this.editor.setTheme("ace/theme/twilight");
-        this.editor.getSession().setMode("ace/mode/javascript");
+        this.editor.getSession().setMode("ace/mode/json");
 
         this.$el.css('display', 'none');
 
