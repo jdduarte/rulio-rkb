@@ -1,6 +1,6 @@
 {
   "keyword": [
-    {text: "some stuff", prob: 0.3},
+    {"text": "some stuff", "prob": 0.3},
     {"to say", prob},
     {"when the keyword appears", prob}
   ],
