@@ -1,7 +1,7 @@
 {
     "name": "rkb",
     "description": "A module for Rulio which makes him having opinion on many subjects",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "dependencies": {
         "express": "2.5.11",
         "ejs": ">= 0.0.1",
