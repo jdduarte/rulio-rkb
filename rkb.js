@@ -1,20 +1,34 @@
 module.exports = exports = function(client) {
   var liveconf = require('liveconf');
   var fs = require('fs');
-  //var conf = JSON.parse(fs.readFileSync(__dirname + '/rkb.config.json').toString());
+  
   conf = liveconf(__dirname + '/rkb.config.json');
+  precompiledRegexs = Object.create(null); //To create an object without prototype
+
+  conf.ee.on('changed', function() {
+    for(k in precompiledRegexs) {
+      if(!conf.hasOwnProperty(k)) {
+        delete precompiledRegexs[k];
+      }
+    }
+  });
 
   client.addListener('message', function (nick, to, text, message) {
      var match = getSomethingToSay(text, conf);
-     if(match){
-     	client.say(to, match);
+     if(match) {
+      client.say(to, match);
      }
   });
 };
 
 function getSomethingToSay(text, conf){
   for(var e in conf){
-    if(text.toLowerCase().indexOf(e) != -1){
+
+    if(!precompiledRegexs[e]) {
+      precompiledRegexs[e] = new RegExp(e);
+    }
+
+    if(precompiledRegexs[e].test(text) || text.toLowerCase().indexOf(e) != -1){
       var prob = Math.random();
       var totalProb = 0;
 
