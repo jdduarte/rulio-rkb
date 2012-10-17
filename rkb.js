@@ -26,7 +26,11 @@ module.exports = exports = function(client) {
 function getSomethingToSay(text, conf){
   for(var e in conf){
     if(text.toLowerCase().indexOf(e) != -1){
+      
       var prob = Math.random();
+      if(e.prob > prob){ return; }
+
+      prob = Math.random();
       var totalProb = 0;
 
       for(var i = 0; i < conf[e].length; ++i){
