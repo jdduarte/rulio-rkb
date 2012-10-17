@@ -1,11 +1,11 @@
 {
   "keyword": [
     {"text": "some stuff", "prob": 0.3},
-    {"to say", prob},
-    {"when the keyword appears", prob}
+    {"text": "to say", "prob": 0.2},
+    {"text": "twhen the keyword appears", "prob": 0.5}
   ],
   "anotherkeyword": [
-    {"more things", prob},
-    {"to say", prob}
+    {"text": "more things", "prob": 0.3},
+    {"text": "to say", "prob": 0.7}
   ]
 }
