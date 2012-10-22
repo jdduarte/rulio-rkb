@@ -1,8 +1,11 @@
 module.exports = exports = function(client) {
   var liveconf = require('liveconf');
   var fs = require('fs');
-  //var conf = JSON.parse(fs.readFileSync(__dirname + '/rkb.config.json').toString());
+  
+  precompiledRegexs = Object.create(null); //To create an object without prototype
+
   conf = liveconf(__dirname + '/rkb.config.json');
+
   conf.ee.on('changed', function(){
     for(var e in conf){
       var ceiling;
@@ -13,20 +16,29 @@ module.exports = exports = function(client) {
 
       normalizeConf(conf[e]);
     }
-  });
+
+    for(k in precompiledRegexs) {
+      if(!conf.hasOwnProperty(k)) {
+        delete precompiledRegexs[k];
+      }
+    }});
 
   client.addListener('message', function (nick, to, text, message) {
      var match = getSomethingToSay(text, conf);
-     if(match){
-     	client.say(to, match);
+     if(match) {
+      client.say(to, match);
      }
   });
 };
 
 function getSomethingToSay(text, conf){
   for(var e in conf){
-    if(text.toLowerCase().indexOf(e) != -1){
-      
+
+    if(!precompiledRegexs[e]) {
+      precompiledRegexs[e] = new RegExp(e);
+    }
+
+    if(precompiledRegexs[e].test(text) || text.toLowerCase().indexOf(e) != -1){
       var prob = Math.random();
       if(e.prob > prob){ return; }
 
@@ -52,6 +64,7 @@ function randomFromInterval(from, to)
 function normalizeConf(conf){
   var sumOfProbs = 0; var sumOfLackingProb = 0; var lackingProbProb = 0;
 
+  //Sums up all the probs of a keyword and counts responses without prob
   for(var o in conf.options){
     var option = conf.options[o];
     if(option.prob){
@@ -61,6 +74,7 @@ function normalizeConf(conf){
     }
   }
 
+  //divides remaining probs by the responses without prob
   if(sumOfProbs < 1){
     lackingProbProb = (1 - sumOfProbs)/sumOfLackingProb;
 
@@ -70,6 +84,7 @@ function normalizeConf(conf){
         option.prob = lackingProbProb;
       }
     }  
+  //in case the sum of probs is larger than 1 it normalizes the probs
   } else {
     for(var o in conf.options){
       var option = conf.options[o];
