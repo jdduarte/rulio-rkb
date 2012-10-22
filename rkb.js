@@ -6,12 +6,12 @@ module.exports = exports = function(client) {
   conf.ee.on('changed', function(){
     for(var e in conf){
       var ceiling;
-      if(!e.prob){ 
-        e.prob = 1;
+      if(!conf[e].prob){ 
+        conf[e].prob = 1;
       }
-      ceiling = e.prob;
+      ceiling = conf[e].prob;
 
-      normalizeConf(e);
+      normalizeConf(conf[e]);
     }
   });
 
@@ -52,9 +52,10 @@ function randomFromInterval(from, to)
 function normalizeConf(conf){
   var sumOfProbs = 0; var sumOfLackingProb = 0; var lackingProbProb = 0;
 
-  for(var o in e.options){
-    if(o.prob){
-      sumOfProbs += o.prob;
+  for(var o in conf.options){
+    var option = conf.options[o];
+    if(option.prob){
+      sumOfProbs += option.prob;
     } else {
       ++sumOfLackingProb;
     }
@@ -63,17 +64,19 @@ function normalizeConf(conf){
   if(sumOfProbs < 1){
     lackingProbProb = (1 - sumOfProbs)/sumOfLackingProb;
 
-    for(var o in e.options){
-      if(!o.prob){
-        o.prob = lackingProbProb;
+    for(var o in conf.options){
+      var option = conf.options[o];
+      if(!option.prob){
+        option.prob = lackingProbProb;
       }
     }  
   } else {
-    for(var o in e.options){
-      if(!o.prob){
-        o.prob = 0;
+    for(var o in conf.options){
+      var option = conf.options[o];
+      if(!option.prob){
+        option.prob = 0;
       } else {
-        o.prob = o.prob / sumOfProbs;
+        option.prob = option.prob / sumOfProbs;
       }
     }  
   }
