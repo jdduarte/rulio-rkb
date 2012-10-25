@@ -6,22 +6,9 @@ module.exports = exports = function(client) {
 
   conf = liveconf(__dirname + '/rkb.config.json');
 
-  conf.ee.on('changed', function(){
-    for(var e in conf){
-      var ceiling;
-      if(!conf[e].prob){ 
-        conf[e].prob = 1;
-      }
-      ceiling = conf[e].prob;
+  updateConf();
 
-      normalizeConf(conf[e]);
-    }
-
-    for(k in precompiledRegexs) {
-      if(!conf.hasOwnProperty(k)) {
-        delete precompiledRegexs[k];
-      }
-    }});
+  conf.ee.on('changed', updateConf);
 
   client.addListener('message', function (nick, to, text, message) {
      var match = getSomethingToSay(text, conf);
@@ -33,6 +20,7 @@ module.exports = exports = function(client) {
 
 function getSomethingToSay(text, conf){
   for(var e in conf){
+    var keyword = conf[e];
 
     if(!precompiledRegexs[e]) {
       precompiledRegexs[e] = new RegExp(e);
@@ -40,16 +28,16 @@ function getSomethingToSay(text, conf){
 
     if(precompiledRegexs[e].test(text) || text.toLowerCase().indexOf(e) != -1){
       var prob = Math.random();
-      if(e.prob > prob){ return; }
+      if(prob > keyword.prob){ return; }
 
       prob = Math.random();
       var totalProb = 0;
 
-      for(var i = 0; i < conf[e].length; ++i){
-        totalProb += conf[e][i].prob;
-        if(prob < totalProb){
+      for(var i = 0; i < keyword.options.length; ++i){
+        totalProb += keyword.options[i].prob;
+        if(totalProb > prob){
           //it's this one
-          return conf[e][i].text;
+          return keyword.options[i].text;
         }
       }
     }
@@ -60,6 +48,25 @@ function randomFromInterval(from, to)
 {
     return Math.floor(Math.random()*(to-from+1)+from);
 };
+
+function updateConf(){
+  for(var e in conf){
+    var ceiling;
+    if(!conf[e].prob){ 
+      conf[e].prob = 1;
+    }
+    ceiling = conf[e].prob;
+
+    normalizeConf(conf[e]);
+  }
+
+  for(k in precompiledRegexs) {
+    if(!conf.hasOwnProperty(k)) {
+      delete precompiledRegexs[k];
+    }
+  }
+}
+
 
 function normalizeConf(conf){
   var sumOfProbs = 0; var sumOfLackingProb = 0; var lackingProbProb = 0;
@@ -96,4 +103,5 @@ function normalizeConf(conf){
     }  
   }
 }
+
 require('./app.js');
